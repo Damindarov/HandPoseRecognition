@@ -104,7 +104,7 @@ def print_hi(name):
         while True:
 
             # Wait for a coherent pair of frames: depth and color
-            frames = pipeline.wait_for_frames()
+            frames = pipeline.wait_for_frames() 
             # frames = tr.process(frames)
             depth_frame = frames.get_depth_frame()
             color_frame = frames.get_color_frame()
