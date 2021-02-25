@@ -79,7 +79,7 @@ def print_hi(name):
     # Configure depth and color streams
     pipeline = rs.pipeline()
     colorizer = rs.colorizer()
-    tr1 = rs.threshold_filter(min_dist=0.15, max_dist=0.55)
+    tr1 = rs.threshold_filter(min_dist=0.15, max_dist=0.9)
     config = rs.config()
     # Get device product line for setting a supporting resolution
     pipeline_wrapper = rs.pipeline_wrapper(pipeline)
@@ -112,18 +112,22 @@ def print_hi(name):
                 continue
 
             colorized_depth = np.asanyarray(colorizer.colorize(tr1.process(depth_frame)).get_data())
+            colori_image = np.asanyarray(color_frame)
             # kernel = np.ones((3, 3), np.uint8)
             # colorized_depth = cv2.erode(colorized_depth, kernel, iterations=1)
 
+            # cv2.imshow('Camera', colori_image)
 
             color_image = cv2.bilateralFilter(colorized_depth, 10, 50, 100)  # Smoothing
-            color_image = cv2.flip(color_image, 0)
-            color_image = cv2.flip(color_image, 1)
+            # color_image = cv2.flip(color_image, 0)
+            color_image = cv2.flip(color_image, 1)#vertical
             bgModel = cv2.createBackgroundSubtractorMOG2(0, 50)
             fgmask = bgModel.apply(color_image)
             kernel = np.ones((3, 3), np.uint8)
             fgmask = cv2.erode(fgmask, kernel, iterations=1)
             img = cv2.bitwise_and(color_image, color_image, mask=fgmask)
+
+
 
             # Skin detect and thresholding
             hsv = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
@@ -194,4 +198,4 @@ def print_hi(name):
 if __name__ == '__main__':
     print_hi('PyCharm')
 
-# See PyCharm help at  https://www.jetbrains.com/help/pycharm/
+# See PyCharm help at https://www.jetbrains.com/help/pycharm/
